@@ -1,21 +1,14 @@
-# scrapers/nairaland_scraper.py
-from apify_client import ApifyClient
+import requests
+from bs4 import BeautifulSoup
 from datetime import datetime
 from loguru import logger
-from config import config
 from scrapers.geo_filter import geo_filter
 
-
 class NairalandScraper:
-    """Scrapes political discussions from Nairaland"""
+    """Scrapes political discussions from Nairaland using requests + BeautifulSoup"""
 
     def __init__(self):
-        self.client = ApifyClient(config.APIFY_API_KEY)
-        self.political_sections = [
-            "politics",
-            "news",
-            "crime",
-        ]
+        self.base_url = "https://www.nairaland.com"
         self.political_keywords = [
             "tinubu", "peter obi", "atiku",
             "apc", "pdp", "labour party",
@@ -24,123 +17,89 @@ class NairalandScraper:
             "sapa", "emilokan", "obidient",
             "structure", "president", "senator",
             "governor", "minister", "corruption",
+            "budget", "subsidy", "dollar", "inflation",
+            "security", "bandit", "kidnap", "boko haram",
         ]
+        self.headers = {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+        }
 
-    def scrape_politics_section(
-        self,
-        max_posts: int = 50
-    ) -> list:
-        """
-        Scrape political posts from Nairaland
-        using Apify web scraper
-        """
-        logger.info(
-            f"Starting Nairaland scrape - max posts: {max_posts}"
-        )
-
+    def scrape_politics_section(self, max_posts: int = 50) -> list:
+        logger.info(f"Starting Nairaland scrape - max posts: {max_posts}")
         scraped_posts = []
 
         try:
-            # Use Apify's website content crawler
-            run_input = {
-                "startUrls": [
-                    {
-                        "url": (
-                            "https://www.nairaland.com/politics"
-                        )
-                    },
-                    {
-                        "url": (
-                            "https://www.nairaland.com/news"
-                        )
-                    },
-                ],
-                "maxCrawlPages": max_posts,
-                "maxCrawlDepth": 2,
-                "linkSelector": "a[href]",
-                "pageFunction": """
-                async function pageFunction(context) {
-                    const { page, request } = context;
-                    const url = request.url;
+            r = requests.get(f"{self.base_url}/politics", headers=self.headers, timeout=15)
+            if r.status_code != 200:
+                logger.error(f"Nairaland returned status {r.status_code}")
+                return []
 
-                    // Extract post content from Nairaland
-                    const posts = await page.evaluate(() => {
-                        const results = [];
-                        const postDivs = document.querySelectorAll(
-                            '.narrow'
-                        );
+            soup = BeautifulSoup(r.text, "html.parser")
+            links = soup.select("a[href*='/politics/']")
+            thread_urls = list(dict.fromkeys([
+                a["href"] for a in links
+                if a["href"].startswith("/politics/") and a["href"].count("/") == 2
+            ]))
 
-                        postDivs.forEach(div => {
-                            const content = div.innerText;
-                            const links = div.querySelectorAll('a');
-                            let author = 'Unknown';
+            logger.info(f"Found {len(thread_urls)} threads")
 
-                            if (links.length > 0) {
-                                author = links[0].innerText;
-                            }
+            for i, thread_path in enumerate(thread_urls[:max_posts]):
+                posts = self._scrape_thread(thread_path)
+                scraped_posts.extend(posts)
+                if len(scraped_posts) >= max_posts:
+                    break
 
-                            if (content && content.length > 20) {
-                                results.push({
-                                    content: content.trim(),
-                                    author: author,
-                                    url: window.location.href
-                                });
-                            }
-                        });
-                        return results;
-                    });
-
-                    return posts;
-                }
-                """,
-            }
-
-            # Run the Apify actor
-            run = self.client.actor(
-                "apify/website-content-crawler"
-            ).call(run_input=run_input)
-
-            # Get results from dataset
-            dataset_items = self.client.dataset(
-                run["defaultDatasetId"]
-            ).iterate_items()
-
-            for item in dataset_items:
-                if isinstance(item, list):
-                    for post in item:
-                        processed = self._process_post(post)
-                        if processed:
-                            scraped_posts.append(processed)
-                elif isinstance(item, dict):
-                    processed = self._process_post(item)
-                    if processed:
-                        scraped_posts.append(processed)
-
-            logger.info(
-                f"Nairaland scrape complete: "
-                f"{len(scraped_posts)} posts"
-            )
+            scraped_posts = scraped_posts[:max_posts]
+            logger.info(f"Nairaland scrape complete: {len(scraped_posts)} posts")
             return scraped_posts
 
         except Exception as e:
             logger.error(f"Nairaland scraping failed: {e}")
             return []
 
+    def _scrape_thread(self, thread_path: str) -> list:
+        posts = []
+        try:
+            url = f"{self.base_url}{thread_path}" if thread_path.startswith("/") else thread_path
+            r = requests.get(url, headers=self.headers, timeout=15)
+            if r.status_code != 200:
+                return []
+
+            soup = BeautifulSoup(r.text, "html.parser")
+            post_divs = soup.select("td[colspan='2']")
+
+            for div in post_divs[:3]:
+                text = div.get_text(strip=True)
+                if len(text) < 30:
+                    continue
+
+                author_tag = div.find_previous("a", class_="user")
+                author = author_tag.get_text(strip=True) if author_tag else "Unknown"
+
+                if self._is_political(text):
+                    processed = self._process_post({
+                        "content": text,
+                        "author": author,
+                        "url": url,
+                    })
+                    if processed:
+                        posts.append(processed)
+
+        except Exception as e:
+            logger.error(f"Thread scrape failed for {thread_path}: {e}")
+
+        return posts
+
     def _process_post(self, raw_post: dict) -> dict:
-        """Process and structure a raw Nairaland post"""
         try:
             content = raw_post.get("content", "")
             if not content or len(content) < 20:
                 return None
-
-            # Check if content is political
             if not self._is_political(content):
                 return None
-
             return {
                 "source": "Nairaland",
                 "content": content[:2000],
-                # Limit content length
                 "author": raw_post.get("author", "Unknown"),
                 "url": raw_post.get("url", ""),
                 "location": geo_filter.detect_location(content),
@@ -155,13 +114,7 @@ class NairalandScraper:
             return None
 
     def _is_political(self, content: str) -> bool:
-        """Check if content contains political keywords"""
         content_lower = content.lower()
-        for keyword in self.political_keywords:
-            if keyword in content_lower:
-                return True
-        return False
+        return any(kw in content_lower for kw in self.political_keywords)
 
-
-# Single instance to use across project
 nairaland_scraper = NairalandScraper()

@@ -7,10 +7,11 @@ from scrapers.geo_filter import geo_filter
 
 
 class TwitterScraper:
-    """Scrapes Nigerian political tweets via Apify"""
+    """Scrapes Nigerian political tweets via Apify (requires API key)"""
 
     def __init__(self):
-        self.client = ApifyClient(config.APIFY_API_KEY)
+        self.api_key = config.APIFY_API_KEY
+        self.client = ApifyClient(self.api_key) if self.api_key else None
         self.political_hashtags = [
             "#Nigeria",
             "#NigeriaDecides",
@@ -34,19 +35,14 @@ class TwitterScraper:
         self,
         max_tweets: int = 100
     ) -> list:
-        """
-        Scrape Nigerian political tweets using Apify
-        Twitter scraper actor
-        """
-        logger.info(
-            f"Starting Twitter scrape - "
-            f"max tweets: {max_tweets}"
-        )
+        if not self.client:
+            logger.warning("Twitter scraper skipped: APIFY_API_KEY not set")
+            return []
 
+        logger.info(f"Starting Twitter scrape - max tweets: {max_tweets}")
         all_tweets = []
 
         try:
-            # Build search queries
             search_terms = " OR ".join(
                 self.political_hashtags[:8]
             )

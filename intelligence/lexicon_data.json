@@ -1,0 +1,239 @@
+{
+  "political_slang": {
+    "emilokan": {
+      "meaning": "It is my turn (political slogan by Tinubu)",
+      "sentiment_hint": "political"
+    },
+    "obidient": {
+      "meaning": "Supporter of Peter Obi",
+      "sentiment_hint": "political"
+    },
+    "sapa": {
+      "meaning": "Economic hardship, being broke",
+      "sentiment_hint": "negative"
+    },
+    "japa": {
+      "meaning": "Fleeing Nigeria for abroad",
+      "sentiment_hint": "negative"
+    },
+    "structure": {
+      "meaning": "Political organization/machinery",
+      "sentiment_hint": "political"
+    },
+    "stomach infrastructure": {
+      "meaning": "Vote buying with food/items",
+      "sentiment_hint": "negative"
+    },
+    "ghana must go": {
+      "meaning": "Bribery bag (not Ghana the country)",
+      "sentiment_hint": "negative"
+    },
+    "wahala": {
+      "meaning": "Serious trouble or problem",
+      "sentiment_hint": "negative"
+    },
+    "gbas gbos": {
+      "meaning": "Heated political argument",
+      "sentiment_hint": "negative"
+    },
+    "shege": {
+      "meaning": "Expression of suffering/frustration",
+      "sentiment_hint": "negative"
+    },
+    "agbaya": {
+      "meaning": "Foolish/rude person",
+      "sentiment_hint": "negative"
+    },
+    "ode": {
+      "meaning": "Fool/stupid person",
+      "sentiment_hint": "negative"
+    },
+    "mumu": {
+      "meaning": "Stupid/foolish person",
+      "sentiment_hint": "negative"
+    }
+  },
+  "economic_slang": {
+    "sapa": {
+      "meaning": "Economic hardship, poverty",
+      "sentiment_hint": "negative"
+    },
+    "japa": {
+      "meaning": "Fleeing the country for economic reasons",
+      "sentiment_hint": "negative"
+    },
+    "dollar": {
+      "meaning": "US Dollar (currency reference)",
+      "sentiment_hint": "economic"
+    },
+    "naira": {
+      "meaning": "Nigerian currency",
+      "sentiment_hint": "economic"
+    },
+    "fuel subsidy": {
+      "meaning": "Government removal of fuel subsidy",
+      "sentiment_hint": "economic"
+    },
+    "pms": {
+      "meaning": "Premium Motor Spirit (petrol)",
+      "sentiment_hint": "economic"
+    }
+  },
+  "pidgin_expressions": {
+    "abeg": {
+      "meaning": "Please/beg (pidgin)",
+      "sentiment_hint": "neutral"
+    },
+    "wahala": {
+      "meaning": "Trouble/problem (pidgin)",
+      "sentiment_hint": "negative"
+    },
+    "sabi": {
+      "meaning": "Know/understand (pidgin)",
+      "sentiment_hint": "neutral"
+    },
+    "no be": {
+      "meaning": "Is not/isn't (pidgin negation)",
+      "sentiment_hint": "neutral"
+    },
+    "wetin": {
+      "meaning": "What (pidgin)",
+      "sentiment_hint": "neutral"
+    },
+    "abi": {
+      "meaning": "Or/is it (pidgin)",
+      "sentiment_hint": "neutral"
+    },
+    "sha": {
+      "meaning": "Self/emphasis (pidgin)",
+      "sentiment_hint": "neutral"
+    },
+    "ehen": {
+      "meaning": "Exclamation/expression (pidgin)",
+      "sentiment_hint": "neutral"
+    },
+    "e don": {
+      "meaning": "It has (pidgin)",
+      "sentiment_hint": "neutral"
+    },
+    "e go": {
+      "meaning": "It will (pidgin)",
+      "sentiment_hint": "neutral"
+    },
+    "na": {
+      "meaning": "Is/am/are (pidgin)",
+      "sentiment_hint": "neutral"
+    },
+    "dey": {
+      "meaning": "Is/are (pidgin)",
+      "sentiment_hint": "neutral"
+    },
+    "dem": {
+      "meaning": "They/them (pidgin)",
+      "sentiment_hint": "neutral"
+    },
+    "una": {
+      "meaning": "You/your (pidgin)",
+      "sentiment_hint": "neutral"
+    },
+    "wey": {
+      "meaning": "That/which (pidgin)",
+      "sentiment_hint": "neutral"
+    },
+    "fit": {
+      "meaning": "Can/be able (pidgin)",
+      "sentiment_hint": "neutral"
+    },
+    "sef": {
+      "meaning": "Even/self (pidgin emphasis)",
+      "sentiment_hint": "neutral"
+    },
+    "chai": {
+      "meaning": "Exclamation of surprise/pain (pidgin)",
+      "sentiment_hint": "negative"
+    },
+    "haba": {
+      "meaning": "Exclamation of disbelief (pidgin)",
+      "sentiment_hint": "negative"
+    },
+    "shey": {
+      "meaning": "Isn't it? (pidgin tag question)",
+      "sentiment_hint": "neutral"
+    },
+    "comot": {
+      "meaning": "Leave/come out (pidgin)",
+      "sentiment_hint": "neutral"
+    },
+    "chop": {
+      "meaning": "Eat/consume (pidgin)",
+      "sentiment_hint": "neutral"
+    },
+    "ginger": {
+      "meaning": "Annoy/irritate (pidgin)",
+      "sentiment_hint": "negative"
+    },
+    "packaging": {
+      "meaning": "Appearance/outside show (pidgin)",
+      "sentiment_hint": "neutral"
+    },
+    "yab": {
+      "meaning": "Insult/ridicule (pidgin)",
+      "sentiment_hint": "negative"
+    }
+  },
+  "sarcasm_indicators": [
+    "e go better",
+    "wonderful government",
+    "best president ever",
+    "best governor ever",
+    "we are lucky",
+    "they are working hard",
+    "typical nigeria",
+    "only in nigeria",
+    "as per usual",
+    "nothing to see here",
+    "government is trying",
+    "we don suffer reach"
+  ],
+  "topic_keywords": {
+    "economy": [
+      "economy", "naira", "dollar", "inflation", "sapa", "japa",
+      "fuel subsidy", "pms", "petrol", "price", "cost", "expensive",
+      "dangote", "recession", "budget", "debt", "loan"
+    ],
+    "election": [
+      "election", "inec", "pvc", "voting", "ballot", "candidate",
+      "president", "governor", "senator", "representative", "campaign",
+      "rally", "polling", "tinubu", "peter obi", "atiku",
+      "apc", "pdp", "labour party", "obidient"
+    ],
+    "security": [
+      "security", "bandit", "kidnap", "bokoharam", "terrorism",
+      "insurgency", "police", "army", "military", "crisis",
+      "violence", "attack", "killings", "farmers", "herders"
+    ],
+    "governance": [
+      "government", "minister", "president", "governor", "senator",
+      "law", "bill", "policy", "reform", "corruption",
+      "emilokan", "structure", "appointiment", "cabinet"
+    ],
+    "fuel_subsidy": [
+      "fuel subsidy", "pms", "petrol", "price", "n200", "n300",
+      "n500", "n1000", "sapa", "hardship"
+    ]
+  },
+  "political_entities": {
+    "parties": {
+      "apc": "All Progressives Congress",
+      "pdp": "People's Democratic Party",
+      "lp": "Labour Party",
+      "nnpp": "New Nigeria People's Party"
+    },
+    "institutions": {
+      "inec": "Independent National Electoral Commission",
+      "cmb": "Customs, Immigration and Prisons Pension Office",
+      "cbn": "Central Bank of Nigeria",
+      "nnpc": "Nigerian National Petroleum Corporation"
+    }
+  }
+}

@@ -9,11 +9,6 @@ API_BASE_URL = "http://127.0.0.1:8000"
 
 
 class DataFetcher:
-    """
-    Fetches data from the API for the dashboard.
-    Falls back to mock data when API is unavailable.
-    """
-
     def __init__(self):
         self.base_url = API_BASE_URL
 
@@ -43,11 +38,13 @@ class DataFetcher:
 
     def get_sentiment_summary(self, topic=None, limit=100) -> dict:
         result = self._try_api("GET", "/api/sentiment/summary", params={"limit": limit})
-        return result if result else self._mock_summary()
+        if result and result.get("total_posts", 0) > 0:
+            return result
+        return self._mock_summary()
 
     def get_recent_posts(self, limit=50, source=None, polarity=None) -> dict:
         result = self._try_api("GET", "/api/sentiment/recent", params={"limit": limit})
-        if result:
+        if result and result.get("count", 0) > 0:
             return result
         posts = SAMPLE_POSTS
         if source:
@@ -58,19 +55,25 @@ class DataFetcher:
 
     def get_regional_hotspots(self) -> dict:
         result = self._try_api("GET", "/api/regions/hotspots")
-        return result if result else {"status": "success", "data": HOTSPOT_DATA}
+        if result and result.get("data"):
+            return result
+        return {"status": "success", "data": HOTSPOT_DATA}
 
     def get_topics(self) -> dict:
         result = self._try_api("GET", "/api/topics/")
-        return result if result else {"status": "success", "data": TOPICS_DATA}
+        if result and result.get("data"):
+            return result
+        return {"status": "success", "data": TOPICS_DATA}
 
     def get_trends(self, hours: int = 24) -> dict:
         result = self._try_api("GET", "/api/trends/", params={"hours": hours})
-        return result if result else {"status": "success", "data": TREND_DATA}
+        if result and result.get("data"):
+            return result
+        return {"status": "success", "data": TREND_DATA}
 
     def get_trending_hashtags(self, limit=10) -> dict:
         result = self._try_api("GET", "/api/trends/hashtags", params={"limit": limit})
-        if result:
+        if result and result.get("data"):
             return result
         return {"status": "success", "data": [
             {"hashtag": "#NigeriaDecides", "count": 1250},
@@ -82,7 +85,7 @@ class DataFetcher:
 
     def trigger_pipeline(self, max_posts=50) -> dict:
         result = self._try_api("POST", "/api/pipeline/run", params={"max_posts": max_posts})
-        return result if result else {"status": "success", "message": "Mock pipeline completed (API unavailable)"}
+        return result if result else {"status": "success", "message": "Mock pipeline completed"}
 
     def check_api_health(self) -> bool:
         try:

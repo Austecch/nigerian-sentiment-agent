@@ -25,16 +25,20 @@ st.markdown("""
         max-width: 1200px !important;
     }
     section[data-testid="stSidebar"] { background-color: #1E1E2F !important; padding: 12px 20px !important; min-width: 240px !important; }
-    .sidebar-title { color: #FFFFFF; font-size: 1.1rem; font-weight: 700; margin-bottom: 8px; padding: 0 16px; }
+    .sidebar-title { color: #FFFFFF; font-size: 1.1rem; font-weight: 700; margin-bottom: 4px; padding: 0 16px; }
+    section[data-testid="stSidebar"] > div { gap: 0px !important; }
+    section[data-testid="stSidebar"] div[data-testid="stVerticalBlock"] { gap: 0px !important; }
+    section[data-testid="stSidebar"] .stButton { margin: 0 !important; padding: 0 !important; }
     section[data-testid="stSidebar"] .stButton button {
         background: transparent !important; color: rgba(255,255,255,0.7) !important;
         border: none !important; border-radius: 6px !important; font-weight: 400 !important;
-        text-align: left !important; padding: 6px 16px !important; font-size: 0.85rem !important;
-        width: 100% !important; margin-bottom: 2px !important;
+        text-align: left !important; padding: 4px 16px !important; font-size: 0.85rem !important;
+        width: 100% !important; margin: 0 !important; line-height: 1.3 !important;
     }
     section[data-testid="stSidebar"] .stButton button:hover { background: rgba(255,255,255,0.08) !important; color: #FFFFFF !important; }
     section[data-testid="stSidebar"] .active-menu button { background: #007BFF !important; color: #FFFFFF !important; font-weight: 500 !important; }
     section[data-testid="stSidebar"] .active-menu button:hover { background: #007BFF !important; }
+    section[data-testid="stSidebar"] .element-container { margin: 0 !important; padding: 0 !important; }
     .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
     .header h1 { font-size: 1.6rem; font-weight: 700; color: #1D1D1F; margin: 0; }
     .header span { font-size: 0.85rem; color: #86868B; }
@@ -361,21 +365,35 @@ def page_pipeline():
 
 def page_settings():
     st.markdown('<div class="chart-section">', unsafe_allow_html=True)
-    st.markdown("### About")
-    st.markdown("**Nigeria Political Pulse** — Real-time sentiment analysis of Nigerian political discourse.")
+    st.markdown("### About This Project")
     st.markdown("")
-    st.markdown("**Built with:** Python, FastAPI, Streamlit, MongoDB, Claude 3.5 Sonnet, Plotly, Folium")
+    st.markdown("**Nigeria Political Pulse** is a multi-agent AI system that monitors and analyzes political discourse across Nigerian online platforms. It combines web scraping, cultural intelligence (Nigerian Pidgin, Yoruba, Igbo, Hausa), and Claude 3.5 to decode the complex landscape of Nigerian political conversation.")
     st.markdown("")
-    st.markdown("**Features:**")
-    st.markdown("- Cultural intelligence for Nigerian Pidgin, Yoruba, Igbo, Hausa")
-    st.markdown("- Sarcasm detection for Nigerian political discourse")
-    st.markdown("- Geographic hotspot mapping across 30+ Nigerian cities")
-    st.markdown("- Multi-agent AI system (Scout → Interpreter → Aggregator)")
+    st.markdown("#### What It Monitors")
+    st.markdown("- **Nairaland** — Nigeria's largest online forum (politics section)")
+    st.markdown("- **Punch, Vanguard, Premium Times, ThisDay** — major Nigerian news sites (comment sections)")
+    st.markdown("- **Twitter/X** — political hashtags and discussions (via Apify)")
+    st.markdown("")
+    st.markdown("#### Cultural Intelligence")
+    st.markdown("- Detects **Nigerian Pidgin**: *Wahala, Sapa, Japa, Abeg, Comot, Chop, Yab*")
+    st.markdown("- Understands **political slang**: *Emilokan, Obidient, Stomach infrastructure, Ghana must go*")
+    st.markdown("- Recognizes **code-mixing**: English-Yoruba, English-Igbo, English-Hausa")
+    st.markdown("- Identifies **sarcasm**: critical for Nigerian discourse (*\"Best president ever\"* while describing failure)")
+    st.markdown("- Maps mentions across **30+ Nigerian cities** (Lagos, Abuja, Kano, Port Harcourt, etc.)")
+    st.markdown("")
+    st.markdown("#### How It Works")
+    st.markdown("1. **Scout Agent** — scrapes raw political posts from all sources, detects bots, removes duplicates")
+    st.markdown("2. **Interpreter Agent** — sends each post to Claude 3.5 for cultural sentiment analysis")
+    st.markdown("3. **Aggregator Agent** — synthesizes metrics (polarity, emotion, topics, regional hotspots)")
+    st.markdown("")
+    st.markdown("**Built with:** Python, FastAPI, Streamlit, MongoDB Atlas, Claude 3.5 Sonnet, Plotly, Folium, CrewAI")
     st.markdown('</div>', unsafe_allow_html=True)
     api_ok = data_fetcher.check_api_health()
     st.markdown('<div class="chart-section"><h3>System Status</h3>', unsafe_allow_html=True)
     st.markdown(f"**API Backend:** {'✅ Online' if api_ok else '❌ Offline'}")
     st.markdown(f"**Data Source:** {'API + Mock Fallback' if api_ok else 'Mock Data Only'}")
+    st.markdown(f"**MongoDB:** Connected to MongoDB Atlas")
+    st.markdown(f"**Anthropic API:** Connected")
     st.markdown(f"**Version:** 1.0.0")
     st.markdown('</div>', unsafe_allow_html=True)
 

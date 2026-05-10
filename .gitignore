@@ -8,3 +8,6 @@ __pycache__/
 .idea/
 *.log
 nigerian-sentiment-agent/
+test_*.py
+debug_*.py
+*.html

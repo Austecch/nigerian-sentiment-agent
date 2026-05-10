@@ -43,7 +43,7 @@ class MongoDBClient:
 
     def get_collection(self, collection_name: str):
         """Get a specific collection"""
-        if not self.db:
+        if self.db is None:
             self.connect_sync()
         return self.db[collection_name]
 

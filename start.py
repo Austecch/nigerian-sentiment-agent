@@ -3,28 +3,24 @@ import subprocess
 import sys
 import time
 
-PORT = int(os.environ.get("PORT", 8000))
+RAILWAY_PORT = int(os.environ.get("PORT", 8000))
 
-# Start FastAPI backend in background
+# Streamlit goes on the Railway-exposed port
+dashboard = subprocess.Popen([
+    sys.executable, "-m", "streamlit", "run",
+    "dashboard/app.py",
+    "--server.port", str(RAILWAY_PORT),
+    "--server.address", "0.0.0.0",
+])
+
+# FastAPI on a fixed internal port (dashboard calls it at 127.0.0.1:8000)
+time.sleep(1)
 backend = subprocess.Popen([
     sys.executable, "-m", "uvicorn",
     "api.main:app",
     "--host", "0.0.0.0",
-    "--port", str(PORT),
+    "--port", "8000",
 ])
 
-# Wait for backend to start
-time.sleep(3)
-
-# Start Streamlit dashboard
-dashboard_port = 8501 if PORT != 8501 else 8502
-dashboard = subprocess.Popen([
-    sys.executable, "-m", "streamlit", "run",
-    "dashboard/app.py",
-    "--server.port", str(dashboard_port),
-    "--server.address", "0.0.0.0",
-])
-
-# Wait for both
-backend.wait()
 dashboard.wait()
+backend.wait()
